@@ -10,11 +10,11 @@ async function getWeatherForecast(city) {
                 date,
                 temperature_max: entry.main.temp_max,
                 temperature_min: entry.main.temp_min,
-                eather: entry.weather[0].main,
+                weather: entry.weather[0].main,
             };
         } else {
             dailyData[date].temperature_max = Math.max(dailyData[date].temperature_max, entry.main.temp_max);
-            dailyData[date].temperature_min = Math.max(dailyData[date].temperature_min, entry.main.temp_min);
+            dailyData[date].temperature_min = Math.min(dailyData[date].temperature_min, entry.main.temp_min);
         }
     });
 
@@ -22,5 +22,15 @@ async function getWeatherForecast(city) {
     return forecast;
 }
 
+function renderWeather(forecast){
+    let contentRef = document.getElementById('content');
+    console.log(forecast)
+    for (let index = 0; index < forecast.length; index++) {
+        const singleForecast = forecast[index];
+        contentRef.innerHTML += getWeatherCardTemplate(singleForecast)
+    }
+
+}
+
 getWeatherForecast('Hannover')
-    .then(forecast => console.log(forecast));
+    .then(forecast => renderWeather(forecast));
